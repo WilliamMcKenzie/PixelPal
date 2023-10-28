@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>PixoForge</title>
+    <link rel="icon" type="image/x-icon" href="icons/favicon.png">
+    <script defer src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Load TensorFlow.js from a script tag -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  </head>
+  <body>
+    <div>Teachable Machine Image Model</div>
+<button type="button" onclick="init()">Start</button>
+<div id="webcam-container"></div>
+<div id="label-container"></div>
+<div style="display: flex;
+        flex-direction: column;
+        align-items: flex-end; ">
+            <h1 id="bannerHeader">Pixoforge</h1>
+            <div style="position: relative; width: 640px;
+            height: 640px;">
+                <div class="guide"></div>
+                <canvas width="640" height="640" id="savedCanvas"></canvas>
+                <canvas width="640" height="640" id="canvasBackground"></canvas>
+                <canvas width="640" height="640" id="canvas"></canvas>
+                <canvas width="640" height="640" id="canvi"></canvas>
+                <canvas width="640" height="640" id="overlay"></canvas>
+                <canvas width="640" height="640" id="selection"></canvas>
+                <canvas width="640" height="640" id="darkBackground"></canvas>
+            </div>
+            <div>
+                <div style="display: flex; align-items: center; flex-direction: row-reverse;" id="options">
+                    <div>
+                        <button id="donebutton" onclick="newTopic()">New Topic</button>
+                    </div>
+                    <div>
+                        <button id="donebutton" onclick="clearCanvas()">Clear</button>
+                    </div>
+                    <div>
+                        <button id="savebutton">
+                            <img src="icons/save.png" onclick="init()" style="height: 50px;">
+                        </button>
+                    </div>
+                </div>
+            </div>
+</div>
+
+        <div id="tools" class="draggable">
+            <div>
+                <button id="pencil" onclick="switchPencil()">
+                    <img src="icons/pencil.png">
+                </button>
+                <button id="bucket" onclick="switchBucket()">
+                    <img src="icons/bucket.png">
+                </button>
+            </div>
+            <div>
+                <button id="eraser" onclick="switchEraser()">
+                    <img src="icons/eraser.png">
+                </button>
+                <button id="eyedropper" onclick="switchEyedropper()">
+                    <img src="icons/eyedropper.png">
+                </button>
+            </div>
+            <div>
+                <button id="select" onclick="switchSelect()">
+                    <img src="icons/selection.png">
+                </button>
+            </div>
+        </div>
+        <div id="colors" class="draggable">
+            <div>
+                <button class="color" style="background-color: #663931;"></button>
+                <button class="color" style="background-color: #45283c;"></button>
+                <button class="color" style="background-color: #000000;"></button>
+            </div>
+            <div>
+                <button class="color" style="background-color: #ffffff;"></button>
+                <button class="color" style="background-color: #cbdbfc;"></button>
+                <button class="color" style="background-color: #9badb7;"></button>
+            </div>
+            <div>
+                <button class="color" style="background-color: #99e550;"></button>
+                <button class="color" style="background-color: #6abe30;"></button>
+                <button class="color" style="background-color: #37946e;"></button>
+            </div>
+            <div>
+                <button class="color" style="background-color: #d95763;"></button>
+                <button class="color" style="background-color: #ac3232;"></button>
+                <button class="color" style="background-color: #76428a;"></button>
+            </div>
+            <div>
+                <button class="color" style="background-color: #5fcde4;"></button>
+                <button class="color" style="background-color: #639bff;"></button>
+                <button class="color" style="background-color: #5b6ee1;"></button>
+            </div>
+            <div>
+                <button class="color" style="background-color: #fbf236;"></button>
+                <button class="color" style="background-color: #eec39a;"></button>
+                <button class="color" style="background-color: #d9a066;"></button>
+            </div>
+            <div>
+                <input type="color" id="colorInput">
+            </div>
+        </div>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<script type="text/javascript">
+    // More API functions here:
+    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+
+    // the link to your model provided by Teachable Machine export panel
+    const URL = "https://teachablemachine.withgoogle.com/models/iS5kX62Pj/";
+
+    let model, webcam, labelContainer, maxPredictions;
+
+    // Load the image model and setup the webcam
+    async function init() {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        // load the model and metadata
+        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+        // or files from your local hard drive
+        // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        // append elements to the DOM
+        labelContainer = document.getElementById("label-container");
+        for (let i = 0; i < maxPredictions; i++) { // and class labels
+            labelContainer.appendChild(document.createElement("div"));
+        }
+        await predict();
+    }
+    // run the webcam image through the image model
+    async function predict() {
+        // predict can take in an image, video or canvas html element
+        const prediction = await model.predict(document.getElementById('canvas'));
+        for (let i = 0; i < maxPredictions; i++) {
+            const classPrediction =
+                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+            labelContainer.childNodes[i].innerHTML = classPrediction;
+        }
+    }
+</script>
+  </body>
+</html>

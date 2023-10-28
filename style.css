@@ -1,0 +1,232 @@
+body {
+    --primary1: #ffffff;
+    --primary2: #eeeeee;
+    --primary3: #cfcfcf;
+    --secondary1: #616161;
+    --secondary2: #94B0DA;
+
+
+
+    margin: 0;
+
+    background: var(--primary1);
+    color: var(--secondary1);
+    font-size: 20px;
+
+    font-family: 'Munro';
+    cursor: url('icons/cursor.png'), auto;
+    overflow: hidden;
+}
+
+button:hover {
+    cursor: url("icons/grab.png");
+}
+
+.draggable {
+    z-index: 100;
+}
+
+.colorpick-eyedropper-input-trigger {
+    visibility: hidden;
+    position: absolute;
+}
+
+#bannerHeader {
+    background-image: url("icons/banner.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-y: -20px;
+    color: rgb(222, 222, 222);
+    font-size: 70px;
+
+    display: flex;
+    justify-content: center;
+
+    text-align: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    width: 20vw;
+    height: 130px;
+    position: absolute;
+    top: 0;
+
+    visibility: hidden;
+}
+
+#savedCanvas {
+    z-index: -100 !important;
+    position: absolute;
+}
+
+#overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 2px solid black;
+
+    z-index: 5;
+
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#selection {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 2px solid black;
+
+    z-index: -10;
+
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.selectionActive {
+    z-index: 4 !important;
+}
+
+
+#canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+#canvasBackground {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background-image: url('icons/background.png');
+
+    z-index: -5;
+}
+
+#tools {
+    position: absolute;
+    left: 0;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: fit-content;
+    padding: 7.5px;
+    padding-top: 2vh;
+
+    height: 100vh;
+    background-color: var(--primary1);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+#tools button {
+    background: var(--primary1);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    
+    margin: 5px;
+    height: 5rem;
+    width: 5rem;
+
+    color: var(--secondary1);
+    font-size: 2rem
+}
+
+#tools button:hover {
+    cursor: url('icons/grab.png'), auto;
+    background: var(--primary2);
+}
+
+.selectedTool {
+    background: var(--primary2) !important;
+    color: black !important;
+    border: 2px solid var(--primary3) !important;
+    filter: brightness(0.9);
+}
+
+
+#options button {
+    font-size: 1.5rem;
+    font-family: 'Munro';
+    color: #7f7f7f;
+
+    background: var(--primary1);
+    border: 2px solid var(--primary3);
+    border-radius: 10px;
+
+    margin: 5px;
+    margin-top: 20px;
+    height: 80px;
+    min-width: 80px;
+    width: fit-content;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#options button:hover {
+    cursor: url('icons/grab.png'), auto;
+    filter: brightness(0.9);
+}
+
+#colorInput {
+    height: 100px;
+    width: 190px;
+    margin: 5px;
+    background: transparent;
+    cursor: url('icons/grab.png'), auto;
+    border: none;
+}
+
+#colorInput::-webkit-color-swatch {
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: none;
+    padding: 0;
+    margin: 0;
+}
+
+#colors {
+    position: absolute;
+    right: 0;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: fit-content;
+    padding: 7.5px;
+    padding-top: 2vh;
+    height: 100vh;
+
+    background-color: var(--primary1);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+.color {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    padding: none;
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: url('icons/grab.png'), auto;
+}
+
+.selectedColor {
+    border-color: #616161;
+}
+
+.selectedInput::-webkit-color-swatch {
+    border-color: #616161;
+}
+
+@font-face {
+    font-family: 'Munro';
+    src: url('fonts/Roboto-Medium.ttf');
+}
