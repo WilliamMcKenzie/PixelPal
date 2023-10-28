@@ -57,6 +57,7 @@ button:hover {
 #savedCanvas {
     z-index: -100 !important;
     position: absolute;
+    top: -1000vh;
 }
 
 #overlay {
