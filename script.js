@@ -40,7 +40,7 @@ canvasBackground.height = vh/1.5
 canvasSelection.width = vh/1.5
 canvasSelection.height = vh/1.5
 
-var CELL_SIDE_COUNT = 64;
+var CELL_SIDE_COUNT = 16;
 var cellPixelLength = canvas.width / CELL_SIDE_COUNT;
 var colorHistory = {};
 var usedColors = ["#000000"]
@@ -50,8 +50,11 @@ var previousMousePos
 setClearCells()
 checkerboard()
 
-function getKeyByValue( value) {
+function getKeyByValue(value) {
     return Object.keys(colorHistory).filter(key => colorHistory[key] === value);
+}
+function getKeyByValueOverload(value, colors) {
+    return Object.keys(colors).filter(key => colors[key] === value);
 }
 
 // Set default color
@@ -63,6 +66,24 @@ colorInput.addEventListener("input", () => {
 
 function updateBrushSize(){
     brushSize = parseInt(document.getElementById('brushSize').value)
+}
+function updateCanvasSize(){
+    if(parseInt(document.getElementById('canvasSizeX').value) > 128){
+        document.getElementById('canvasSizeX').value = 128
+    }
+    CELL_SIDE_COUNT = parseInt(document.getElementById('canvasSizeX').value)
+    document.getElementById('canvasSizeY').value = parseInt(document.getElementById('canvasSizeX').value)
+    cellPixelLength = canvas.width / CELL_SIDE_COUNT;
+    var temp = colorHistory
+    clearCanvas()
+    setClearCells()
+    checkerboard()
+
+    rePaintCanvas(temp)
+
+    Object.keys(temp).forEach(function (key){
+        colorHistory[key] = temp[key]
+    });
 }
 
 //Set canvas bg color 
@@ -82,8 +103,28 @@ function checkerboard(){
 
             fillColor == "#fff" ? fillColor = "#e0e0e0" : fillColor = "#fff"
         } 
-        fillColor == "#fff" ? fillColor = "#e0e0e0" : fillColor = "#fff"
+        if (CELL_SIDE_COUNT % 2 == 0) fillColor == "#fff" ? fillColor = "#e0e0e0" : fillColor = "#fff"
     }
+}
+
+function rePaintCanvas(colors){
+    drawingContext.clearRect(0, 0, canvas.width, canvas.height)
+
+    usedColors.forEach(color => {
+
+        var values = getKeyByValueOverload(color, colors)
+        
+
+        values.forEach(cur => {
+            cur = cur.split("_")
+
+            var x = cur[0]
+            var y = cur[1]
+
+            drawingContext.fillStyle = color
+            drawingContext.fillRect(Math.floor(x*cellPixelLength), Math.floor(y*cellPixelLength), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
+        });
+    });
 }
 
 //make pallet

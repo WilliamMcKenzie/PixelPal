@@ -10,6 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://kit.fontawesome.com/350f22f69a.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
+
+    <!-- driver js -->
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
 </head>
 
 <body draggable="false" ondragstart="return false">
@@ -70,12 +74,12 @@
             <div>
                 <input type="color" id="colorInput">
             </div>
-            <div class="inputContainer" style="margin-top: auto;">
+            <div class="inputContainer" id="canvasSizeContainer" style="margin-top: auto;">
                 <i class="fa fa-maximize"></i>
-                <input id="sizeX" type="number" value='64'>
-                <input id="sizeY" type="number" value='64'>
+                <input id="canvasSizeX" type="number" onchange="updateCanvasSize()" min="4" max="128" value='16'>
+                <input style="filter: brightness(0.9);" id="canvasSizeY" type="number" readonly value='16'>
             </div>
-            <div class="inputContainer">
+            <div class="inputContainer" id="brushSizeContainer">
                 <i class="fa fa-circle"></i>
                 <input id="brushSize" type="number" onchange="updateBrushSize()" min="0" max="5" value='2'>
             </div>
@@ -95,7 +99,7 @@
             </div>
             <div style="display: flex; flex-direction: column; align-items: center;">
                 <div id="rating" style="display: flex; align-items: center; justify-content: center; visibility: hidden; background: var(--primary2); padding: 10px; border-radius: 20px; border: 2px solid var(--primary3); width: fit-content;">
-                    <i id="1" class="fa-regular fa-star"></i>
+                    <i id="1" class="fa fa-star"></i>
                     <i id="2" class="fa-regular fa-star"></i>
                     <i id="3" class="fa-regular fa-star"></i>
                     <i id="4" class="fa-regular fa-star"></i>
@@ -113,12 +117,17 @@
                         </button>
                     </div>
                     <div style="margin-right: 30px;">
+                        <button id="tutorialbutton" class="iconbutton" onclick="tutorial()">
+                            <i class="fa fa-book"></i>
+                        </button>
+                    </div>
+                    <div style="margin-right: 30px;">
                         <button id="appraisebutton" class="iconbutton" onclick="init()">
                             <i class="fa fa-award"></i>
                         </button>
                     </div>
                     <div>
-                        <button id="donebutton" class="iconbutton" onclick="newTopic()">
+                        <button id="ideabutton" class="iconbutton" onclick="newTopic()">
                             <i class="fa fa-lightbulb"></i>
                         </button>
                     </div>
@@ -167,33 +176,31 @@
                 console.log(predictions)
             }
 
-            document.getElementById('1').classList.remove("fa")
             document.getElementById('2').classList.remove("fa")
             document.getElementById('3').classList.remove("fa")
             document.getElementById('4').classList.remove("fa")
             document.getElementById('5').classList.remove("fa")
 
-            document.getElementById('1').classList.add("fa-regular")
             document.getElementById('2').classList.add("fa-regular")
             document.getElementById('3').classList.add("fa-regular")
             document.getElementById('4').classList.add("fa-regular")
             document.getElementById('5').classList.add("fa-regular")
 
             if(predictions[1] < 1){
-                document.getElementById('1').classList.add("fa")
-                document.getElementById('1').classList.remove("fa-regular")
-            }
-            if(predictions[1] < 0.8){
                 document.getElementById('2').classList.add("fa")
                 document.getElementById('2').classList.remove("fa-regular")
             }
-            if(predictions[1] < 0.6){
+            if(predictions[1] < 0.8){
                 document.getElementById('3').classList.add("fa")
                 document.getElementById('3').classList.remove("fa-regular")
             }
-            if(predictions[1] < 0.4){
+            if(predictions[1] < 0.6){
                 document.getElementById('4').classList.add("fa")
                 document.getElementById('4').classList.remove("fa-regular")
+            }
+            if(predictions[1] < 0.4){
+                document.getElementById('5').classList.add("fa")
+                document.getElementById('5').classList.remove("fa-regular")
             }
             if(predictions[1] < 0.2){
                 document.getElementById('5').classList.add("fa")
@@ -202,6 +209,38 @@
             document.getElementById('rating').style.visibility = "visible"
             document.body.style.cursor = 'default'
         }
+    </script>
+    <script>
+
+        function tutorial(){
+            const driver = window.driver.js.driver;
+            const driverObj = driver({
+            showProgress: true,
+            steps: [
+                { element: '#colors', popover: { title: 'Utilities', description: 'For making adjustments to your art.' } },
+                { element: '#colorInput', popover: { title: 'Colors', description: 'You can create your own or take colors from the pallet.' } },
+                { element: '#canvasSizeContainer', popover: { title: 'Canvas Size', description: 'Resize the canvas (be warned, your art will scale accordingly.)' } },
+                { element: '#brushSizeContainer', popover: { title: 'Brush Size', description: 'Change your brushes size (max 5px)' } },
+
+                { element: '#tools', popover: { title: 'Tools', description: 'For drawing and erasing your art.' } },
+                { element: '#pencil', popover: { title: 'Brush', description: 'The basic brush, scales with brush size and can be used for fine details.' } },
+                { element: '#bucket', popover: { title: 'Bucket', description: 'When fill mode is selected, it changes all colors on the canvas.' } },
+                { element: '#eraser', popover: { title: 'Eraser', description: 'Erase your mistakes! Scales with brush size.' } },
+                { element: '#select', popover: { title: 'Rectangle', description: 'TWhen fill mode is selected, it fills in a rectangle area. Otherwise it just draws an outline.' } },
+                { element: '#fill', popover: { title: 'Fill Mode', description: 'Fill mode applies to the bucket and rectangle, making them fill more pixels.' } },
+                
+                { element: '#options', popover: { title: 'Menu', description: 'For some niche and neat tools to use on your canvas.',side:'top' } },
+                { element: '#ideabutton', popover: { title: 'Ideas', description: 'To generate ideas for your next piece!' } },
+                { element: '#appraisebutton', popover: { title: 'Appraise', description: 'To have a custom AI rate your drawing out of 5 stars. It may take a little while so be patient!' } },
+                { element: '#tutorialbutton', popover: { title: 'Tutorial', description: 'To replay this.' } },
+                { element: '#savebutton', popover: { title: 'Save', description: 'To save your piece in PNG format.' } },
+                { element: '#donebutton', popover: { title: 'Clear Canvas', description: 'To reset your canvas good as new.' } },
+            ]
+            });
+            driverObj.drive();
+        }
+
+        tutorial()
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
