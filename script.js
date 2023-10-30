@@ -3,6 +3,9 @@
  */
 
 var curTool = "pencil"
+var brushSize = 2
+var fillMode = false
+
 document.body.style.cursor = "url('icons/cursor.png'), auto";
 if (document.querySelector('.selectedTool')) document.querySelector('.selectedTool').classList.remove('selectedTool')
 document.getElementById("pencil").classList.add('selectedTool')
@@ -57,6 +60,10 @@ colorInput.value = "#000000"
 colorInput.addEventListener("input", () => {
     usedColors.push(colorInput.value)
 })
+
+function updateBrushSize(){
+    brushSize = parseInt(document.getElementById('brushSize').value)
+}
 
 //Set canvas bg color 
 drawingContext.fillStyle = "rgba(255, 99, 71, 0)"
@@ -125,14 +132,21 @@ function fillCell() {
     const canvasBoundingRect = canvas.getBoundingClientRect()
     const cellX = Math.floor((mousePos.x - canvasBoundingRect.left) / cellPixelLength)
     const cellY = Math.floor((mousePos.y - canvasBoundingRect.top) / cellPixelLength)
-    const cur = cellX + "_" + cellY
 
     const startX = cellX * cellPixelLength
     const startY = cellY * cellPixelLength
 
     drawingContext.fillStyle = colorInput.value
-    drawingContext.fillRect((startX), (startY), (cellPixelLength), (cellPixelLength))
-    colorHistory[cur] = colorInput.value
+    drawingContext.fillRect(Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength*brushSize), Math.ceil(cellPixelLength*brushSize))
+    
+    for(var i = cellX; i < cellX+brushSize; i++){
+        console.log(cellX)
+        console.log(brushSize)
+        for(var k = cellY; k < cellY+brushSize; k++){
+            const cur = i + "_" + k
+            colorHistory[cur] = colorInput.value
+        } 
+    }
 }
 
 
@@ -140,13 +154,17 @@ function deleteCell() {
     const canvasBoundingRect = canvas.getBoundingClientRect()
     const cellX = Math.floor((mousePos.x - canvasBoundingRect.left) / cellPixelLength)
     const cellY = Math.floor((mousePos.y - canvasBoundingRect.top) / cellPixelLength)
-    const cur = cellX + "_" + cellY
 
     const startX = cellX * cellPixelLength
     const startY = cellY * cellPixelLength
 
-    drawingContext.clearRect(Math.ceil(startX), Math.ceil(startY), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
-    colorHistory[cur] = "clear"
+    drawingContext.clearRect(Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength*brushSize), Math.ceil(cellPixelLength*brushSize))
+    for(var i = cellX; i < cellX+brushSize; i++){
+        for(var k = cellY; k < cellY+brushSize; k++){
+            const cur = i + "_" + k
+            colorHistory[cur] = 'clear'
+        } 
+    }
 }
 
 function bucketFill() {
@@ -162,13 +180,17 @@ function bucketFill() {
 
     var values = getKeyByValue(colorHistory[cur])
 
+    console.log(brushSize)
+
     for (var i = 0; i < values.length; i++) {
         var curValue = values[i].split("_")
 
         colorHistory[values[i]] = colorInput.value
 
         drawingContext.fillStyle = colorInput.value
-        drawingContext.fillRect((curValue[0] * cellPixelLength), (curValue[1] * cellPixelLength), (cellPixelLength), (cellPixelLength))
+        drawingContext.fillRect(Math.floor(curValue[0] * cellPixelLength), Math.floor(curValue[1] * cellPixelLength), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
+        
+        Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength*brushSize), Math.ceil(cellPixelLength*brushSize)
     }
 }
 
@@ -195,8 +217,8 @@ function selectionTool(e) {
     const startX = cellX * cellPixelLength
     const startY = cellY * cellPixelLength
 
-    selectionContext.fillStyle = colorInput.value
-    drawingContext.fillRect((startX), (startY), (cellPixelLength), (cellPixelLength))
+    drawingContext.fillStyle = colorInput.value
+    drawingContext.fillRect(Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
 
     id = setInterval(() => {
         drawSelection(startX, startY, cellX, cellY, canvasBoundingRect, selectionContext, "temp")
@@ -218,14 +240,15 @@ function drawSelection(startX, startY, cellX, cellY, canvasBoundingRect, ctx, st
 
     if (status == "final") {
         colorHistory[`${cellX2}_${cellY2}`] = colorInput.value
-        console.log(colorHistory)
     }
 
     ctx.fillStyle = colorInput.value
-    ctx.fillRect((startX2), (startY2), (cellPixelLength), (cellPixelLength))
+    ctx.fillRect(Math.floor(startX2), Math.floor(startY2), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
 
     var distancex = 0
     var distancey = 0
+
+    console.log(Math.abs(cellX-cellX2))
 
     for (var i = 0; i < Math.abs(cellX - cellX2); i++) {
 
@@ -236,9 +259,9 @@ function drawSelection(startX, startY, cellX, cellY, canvasBoundingRect, ctx, st
         }
 
         if (status == "final") {
-            drawingContext.fillRect((startX + distancex * cellPixelLength), (startY2), (cellPixelLength), (cellPixelLength))
-            drawingContext.fillRect((startX + distancex * cellPixelLength), (startY), (cellPixelLength), (cellPixelLength))
-            drawingContext.fillRect((startX2), (startY2), (cellPixelLength), (cellPixelLength))
+            drawingContext.fillRect(Math.floor(startX + distancex * cellPixelLength), Math.floor(startY2), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
+            drawingContext.fillRect(Math.floor(startX + distancex * cellPixelLength), Math.floor(startY), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
+            drawingContext.fillRect(Math.floor(startX2), Math.floor(startY2), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
             colorHistory[`${cellX + distancex}_${cellY2}`] = colorInput.value
             colorHistory[`${cellX + distancex}_${cellY}`] = colorInput.value
             colorHistory[`${cellX}_${cellY}`] = colorInput.value
@@ -265,6 +288,30 @@ function drawSelection(startX, startY, cellX, cellY, canvasBoundingRect, ctx, st
         ctx.fillRect((startX2), (startY + distancey * cellPixelLength), (cellPixelLength), (cellPixelLength))
     }
 
+    if(status == "final" && fillMode){
+        drawingContext.fillRect((startX), (startY), (distancex*cellPixelLength), (distancey*cellPixelLength))
+        distancex = 0;
+        distancey = 0;
+
+        for (var i = 0; i < Math.abs(cellX - cellX2); i++) {
+            distancey = 0;
+            if (cellX2 < cellX) {
+                distancex--
+            } else {
+                distancex++
+            }
+            for (var k = 0; k < Math.abs(cellY - cellY2); k++) {
+                console.log(distancex, distancey)
+                if (cellY2 < cellY) {
+                    distancey--
+                } else {
+                    distancey++
+                }
+                colorHistory[`${cellX+distancex}_${cellY+distancey}`] = colorInput.value
+            }
+        }
+    }
+
 
     if (status) {
         var values = getKeyByValue(colorInput.value)
@@ -275,7 +322,7 @@ function drawSelection(startX, startY, cellX, cellY, canvasBoundingRect, ctx, st
             colorHistory[values[i]] = colorInput.value
 
             drawingContext.fillStyle = colorInput.value
-            drawingContext.fillRect((curValue[0] * cellPixelLength), (curValue[1] * cellPixelLength), (cellPixelLength), (cellPixelLength))
+            drawingContext.fillRect(Math.floor(curValue[0] * cellPixelLength), Math.floor(curValue[1] * cellPixelLength), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
         }
     }
 
@@ -297,11 +344,12 @@ function previewAction() {
         overlayContext.clearRect(0, 0, canvas.width, canvas.height);
 
         overlayContext.fillStyle = colorInput.value
-        overlayContext.fillRect(startX, startY, cellPixelLength, cellPixelLength)
+        overlayContext.fillRect(Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength*brushSize), Math.ceil(cellPixelLength*brushSize))
     }, 1);
 }
 
 function setClearCells() {
+    document.getElementById('rating').style.visibility = "hidden"
     for (var i = 0; i < CELL_SIDE_COUNT; i++) {
         for (var k = 0; k < CELL_SIDE_COUNT; k++) {
             colorHistory[`${k}_${i}`] = "clear"
@@ -313,6 +361,7 @@ function setClearCells() {
 function newTopic() {
     // banner = document.getElementById("bannerHeader")
     // banner.innerHTML = drawingSubjects[Math.floor(Math.random() * drawingSubjects.length)]
+    document.getElementById('rating').style.visibility = "hidden"
     window.alert(`Draw me a ${drawingSubjects[Math.floor(Math.random() * drawingSubjects.length)]}`)
 }
 
@@ -404,10 +453,29 @@ canvasOverlay.addEventListener("touchcancel", () => {
     mouseOut();
 })
 
+document.addEventListener("wheel", function (e) {
+
+    // // get the old value of the translation (there has to be an easier way than this)
+    // var oldVal = parseInt(document.getElementById("body").style.transform.replace("translateY(","").replace("px)",""));
+
+    // // to make it work on IE or Chrome
+    // var variation = parseInt(e.deltaY);
+    
+    // update the body translation to simulate a scroll
+    document.getElementById('canvas').style.width = `transform: scale(${1.1});`
+
+    canvasOverlay.style.transform = `transform: scale(${1.1});`
+
+    canvasBackground.style.transform = `transform: scale(${1.1});`
+
+    canvasSelection.style.transform = `transform: scale(${1.1});`
+
+    return false;
+    
+}, true);
 window.addEventListener('mousemove', (event) => {
     mousePos = { x: event.clientX, y: event.clientY };
 });
-
 canvasOverlay.addEventListener("mouseover", previewAction)
 
 
@@ -445,6 +513,13 @@ function switchSelect() {
 
     if (document.querySelector('.selectedTool')) document.querySelector('.selectedTool').classList.remove('selectedTool')
     document.getElementById("select").classList.add('selectedTool')
+}
+function switchFill() {
+    if(fillMode == true) fillMode = false
+    else fillMode = true
+
+    if (document.querySelector('.fillMode')) document.querySelector('.fillMode').classList.remove('fillMode')
+    else document.getElementById("fill").classList.add('fillMode')
 }
 
 

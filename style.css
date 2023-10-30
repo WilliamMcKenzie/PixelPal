@@ -120,6 +120,7 @@ button:hover {
     height: fit-content;
     padding: 7.5px;
     padding-top: 2vh;
+    padding-bottom: 2vh;
 
     height: 100vh;
     background-color: var(--primary1);
@@ -150,7 +151,17 @@ button:hover {
     border: 2px solid var(--primary3) !important;
     filter: brightness(0.9);
 }
+.fillMode {
+    background: var(--primary2) !important;
+    color: black !important;
+    border: 2px solid var(--primary3) !important;
+    filter: brightness(0.9);
+}
 
+#options {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    border-radius: 10px;
+}
 
 #options button {
     font-size: 1.5rem;
@@ -158,22 +169,23 @@ button:hover {
     color: #7f7f7f;
 
     background: var(--primary1);
-    border: 2px solid var(--primary3);
+    border: 0px solid var(--primary3);
     border-radius: 10px;
 
     margin: 5px;
     margin-top: 20px;
-    height: 80px;
-    min-width: 80px;
+    height: 60px;
+    min-width: 60px;
     width: fit-content;
-    padding-left: 20px;
-    padding-right: 20px;
+
+    transition: 0.3s;
 }
 
 #options button:hover {
     cursor: url('icons/grab.png'), auto;
     filter: brightness(0.9);
 }
+
 
 #colorInput {
     height: 100px;
@@ -198,11 +210,12 @@ button:hover {
     width: fit-content;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     height: fit-content;
     padding: 7.5px;
     padding-top: 2vh;
+    padding-bottom: 2vh;
     height: 100vh;
 
     background-color: var(--primary1);
@@ -217,6 +230,26 @@ button:hover {
     border: 2px solid black;
     border-radius: 5px;
     cursor: url('icons/grab.png'), auto;
+}
+
+.inputContainer {
+    display: flex;
+    margin-bottom: 2vh;
+    font-size: 2rem;
+}
+.inputContainer i {
+ margin: 10px;
+}
+.inputContainer input {
+    background-color: var(--primary2);
+
+    max-width: 40px;
+    padding: 10px;
+    margin: 5px;
+
+    outline: none;
+    border-radius: 10px;
+    border: 2px solid var(--primary3);
 }
 
 .selectedColor {

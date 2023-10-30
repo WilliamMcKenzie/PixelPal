@@ -18,10 +18,10 @@
     align-items: center;     flex-wrap: wrap; align-content: center; height: 100vh;">
         <div id="tools">
             <button id="pencil" onclick="switchPencil()">
-                <i class="fa fa-pencil"></i>
+                <i class="fa fa-paintbrush"></i>
             </button>
             <button id="bucket" onclick="switchBucket()">
-                <i class="fa fa-bucket"></i>
+                <i class="fa fa-fill"></i>
             </button>
             <button id="eraser" onclick="switchEraser()">
                 <i class="fa fa-eraser"></i>
@@ -31,6 +31,9 @@
             </button>
             <button id="select" onclick="switchSelect()">
                 <i class="fa fa-vector-square"></i>
+            </button>
+            <button style="margin-top: auto;" id="fill" onclick="switchFill()">
+                <i class="fa fa-droplet"></i>
             </button>
         </div>
         <div id="colors">
@@ -67,6 +70,15 @@
             <div>
                 <input type="color" id="colorInput">
             </div>
+            <div class="inputContainer" style="margin-top: auto;">
+                <i class="fa fa-maximize"></i>
+                <input id="sizeX" type="number" value='64'>
+                <input id="sizeY" type="number" value='64'>
+            </div>
+            <div class="inputContainer">
+                <i class="fa fa-circle"></i>
+                <input id="brushSize" type="number" onchange="updateBrushSize()" min="0" max="5" value='2'>
+            </div>
         </div>
         <div style="display: flex;
         flex-direction: column;
@@ -81,8 +93,8 @@
                 <canvas id="overlay"></canvas>
                 <canvas id="selection"></canvas>
             </div>
-            <div>
-                <div style="display: flex; align-items: center; justify-content: center;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div id="rating" style="display: flex; align-items: center; justify-content: center; visibility: hidden; background: var(--primary2); padding: 10px; border-radius: 20px; border: 2px solid var(--primary3); width: fit-content;">
                     <i id="1" class="fa-regular fa-star"></i>
                     <i id="2" class="fa-regular fa-star"></i>
                     <i id="3" class="fa-regular fa-star"></i>
@@ -90,9 +102,6 @@
                     <i id="5" class="fa-regular fa-star"></i>
                 </div>
                 <div style="display: flex; align-items: center; flex-direction: row-reverse;" id="options">
-                    <div>
-                        <button id="donebutton" onclick="newTopic()">New Topic</button>
-                    </div>
                     <div>
                         <button id="donebutton" class="iconbutton" onclick="clearCanvas()">
                             <i class="fa fa-trash"></i>
@@ -103,9 +112,14 @@
                             <i class="fa fa-floppy-disk"></i>
                         </button>
                     </div>
-                    <div>
+                    <div style="margin-right: 30px;">
                         <button id="appraisebutton" class="iconbutton" onclick="init()">
                             <i class="fa fa-award"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <button id="donebutton" class="iconbutton" onclick="newTopic()">
+                            <i class="fa fa-lightbulb"></i>
                         </button>
                     </div>
                     <div id="label-container"></div>
@@ -125,6 +139,7 @@
         // Load the image model and setup the webcam
         async function init() {
             document.body.style.cursor = 'wait'
+            document.getElementById('rating').style.visibility = "hidden"
             const modelURL = URL + "model.json";
             const metadataURL = URL + "metadata.json";
     
@@ -184,6 +199,7 @@
                 document.getElementById('5').classList.add("fa")
                 document.getElementById('5').classList.remove("fa-regular")
             }
+            document.getElementById('rating').style.visibility = "visible"
             document.body.style.cursor = 'default'
         }
     </script>
