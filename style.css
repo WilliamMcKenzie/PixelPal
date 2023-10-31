@@ -13,7 +13,7 @@ body {
     color: var(--secondary1);
     font-size: 20px;
 
-    font-family: 'Munro';
+    font-family: 'Roboto';
     cursor: url('icons/cursor.png'), auto;
     overflow: hidden;
 }
@@ -165,7 +165,7 @@ button:hover {
 
 #options button {
     font-size: 1.5rem;
-    font-family: 'Munro';
+    font-family: 'Roboto';
     color: #7f7f7f;
 
     background: var(--primary1);
@@ -234,8 +234,13 @@ button:hover {
 
 .inputContainer {
     display: flex;
+    align-items: center;
     margin-bottom: 2vh;
-    font-size: 2rem;
+}
+.inputContainer input {
+    font-family: 'Pixel';
+    font-size: 1.25rem;
+    color: var(--secondary1);
 }
 .inputContainer i {
  margin: 10px;
@@ -260,7 +265,27 @@ button:hover {
     border-color: #616161;
 }
 
+.fa-spinner {
+    animation: spin;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 @font-face {
-    font-family: 'Munro';
+    font-family: 'Roboto';
     src: url('fonts/Roboto-Medium.ttf');
+}
+@font-face {
+    font-family: 'Pixel';
+    src: url('fonts/munro.ttf');
 }

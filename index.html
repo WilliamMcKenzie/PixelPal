@@ -123,7 +123,7 @@
                     </div>
                     <div style="margin-right: 30px;">
                         <button id="appraisebutton" class="iconbutton" onclick="init()">
-                            <i class="fa fa-award"></i>
+                            <i class="fa fa-award" id="appraiseicon"></i>
                         </button>
                     </div>
                     <div>
@@ -149,6 +149,10 @@
         async function init() {
             document.body.style.cursor = 'wait'
             document.getElementById('rating').style.visibility = "hidden"
+
+            document.getElementById('appraiseicon').classList.add('fa-spinner')
+            document.getElementById('appraiseicon').classList.remove('fa-award')
+
             const modelURL = URL + "model.json";
             const metadataURL = URL + "metadata.json";
     
@@ -208,6 +212,8 @@
             }
             document.getElementById('rating').style.visibility = "visible"
             document.body.style.cursor = 'default'
+            document.getElementById('appraiseicon').classList.remove('fa-spinner')
+            document.getElementById('appraiseicon').classList.add('fa-award')
         }
     </script>
     <script>
@@ -219,14 +225,14 @@
             steps: [
                 { element: '#colors', popover: { title: 'Utilities', description: 'For making adjustments to your art.' } },
                 { element: '#colorInput', popover: { title: 'Colors', description: 'You can create your own or take colors from the pallet.' } },
-                { element: '#canvasSizeContainer', popover: { title: 'Canvas Size', description: 'Resize the canvas (be warned, your art will scale accordingly.)' } },
+                { element: '#canvasSizeContainer', popover: { title: 'Canvas Size', description: 'Resize the canvas.' } },
                 { element: '#brushSizeContainer', popover: { title: 'Brush Size', description: 'Change your brushes size (max 5px)' } },
 
                 { element: '#tools', popover: { title: 'Tools', description: 'For drawing and erasing your art.' } },
                 { element: '#pencil', popover: { title: 'Brush', description: 'The basic brush, scales with brush size and can be used for fine details.' } },
                 { element: '#bucket', popover: { title: 'Bucket', description: 'When fill mode is selected, it changes all colors on the canvas.' } },
                 { element: '#eraser', popover: { title: 'Eraser', description: 'Erase your mistakes! Scales with brush size.' } },
-                { element: '#select', popover: { title: 'Rectangle', description: 'TWhen fill mode is selected, it fills in a rectangle area. Otherwise it just draws an outline.' } },
+                { element: '#select', popover: { title: 'Rectangle', description: 'When fill mode is selected, it fills in a rectangle area. Otherwise it just draws an outline.' } },
                 { element: '#fill', popover: { title: 'Fill Mode', description: 'Fill mode applies to the bucket and rectangle, making them fill more pixels.' } },
                 
                 { element: '#options', popover: { title: 'Menu', description: 'For some niche and neat tools to use on your canvas.',side:'top' } },

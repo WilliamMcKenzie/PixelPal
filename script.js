@@ -181,8 +181,6 @@ function fillCell() {
     drawingContext.fillRect(Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength*brushSize), Math.ceil(cellPixelLength*brushSize))
     
     for(var i = cellX; i < cellX+brushSize; i++){
-        console.log(cellX)
-        console.log(brushSize)
         for(var k = cellY; k < cellY+brushSize; k++){
             const cur = i + "_" + k
             colorHistory[cur] = colorInput.value
@@ -217,21 +215,58 @@ function bucketFill() {
     const startX = cellX * cellPixelLength
     const startY = cellY * cellPixelLength
 
-    console.log(cur)
+    if(!fillMode){
+        floodFill(cur)
+    } else {
+        var values = getKeyByValue(colorHistory[cur])
 
-    var values = getKeyByValue(colorHistory[cur])
+        for (var i = 0; i < values.length; i++) {
+            var curValue = values[i].split("_")
+    
+            colorHistory[values[i]] = colorInput.value
+    
+            drawingContext.fillStyle = colorInput.value
+            drawingContext.fillRect(Math.floor(curValue[0] * cellPixelLength), Math.floor(curValue[1] * cellPixelLength), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
+            
+            Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength*brushSize), Math.ceil(cellPixelLength*brushSize)
+        }
+    }
+}
+function floodFill(cur){
+    curTemp = cur.split("_")
+    const cellX = parseInt(curTemp[0])
+    const cellY = parseInt(curTemp[1])
+    const startX = cellX * cellPixelLength
+    const startY = cellY * cellPixelLength
+    var value = colorHistory[cur]
 
-    console.log(brushSize)
+    if(colorHistory[cur] == colorInput.value) {
+        return
+    }
 
-    for (var i = 0; i < values.length; i++) {
-        var curValue = values[i].split("_")
+    colorHistory[`${cellX}_${cellY}`] = colorInput.value
+    drawingContext.fillStyle = colorInput.value
+    drawingContext.fillRect(Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
 
-        colorHistory[values[i]] = colorInput.value
+    if(cellY > 0 && colorHistory[`${cellX}_${cellY-1}`] && colorHistory[`${cellX}_${cellY-1}`] == value){
+        var temp = floodFill(`${cellX}_${cellY-1}`)
+    }
+    if(cellX > 0 && colorHistory[`${cellX-1}_${cellY}`] && colorHistory[`${cellX-1}_${cellY}`] == value){
+        var temp = floodFill(`${cellX-1}_${cellY}`)
+    } 
+    if(cellY < CELL_SIDE_COUNT && colorHistory[`${cellX}_${cellY+1}`] && colorHistory[`${cellX}_${cellY+1}`] == value){
+        var temp = floodFill(`${cellX}_${cellY+1}`)
+    }
+    if(cellX < CELL_SIDE_COUNT && colorHistory[`${cellX+1}_${cellY}`] && colorHistory[`${cellX+1}_${cellY}`] == value){
+        var temp = floodFill(`${cellX+1}_${cellY}`)
+    }
 
-        drawingContext.fillStyle = colorInput.value
-        drawingContext.fillRect(Math.floor(curValue[0] * cellPixelLength), Math.floor(curValue[1] * cellPixelLength), Math.ceil(cellPixelLength), Math.ceil(cellPixelLength))
-        
-        Math.floor(startX), Math.floor(startY), Math.ceil(cellPixelLength*brushSize), Math.ceil(cellPixelLength*brushSize)
+    return
+}
+
+function floodFillChecks(next, cellY, cellX){
+    if(cellY > 0 && colorHistory[next] && colorHistory[next] == value){
+        var temp = floodFill(`${cellX}_${cellY-1}`)
     }
 }
 
@@ -289,8 +324,6 @@ function drawSelection(startX, startY, cellX, cellY, canvasBoundingRect, ctx, st
     var distancex = 0
     var distancey = 0
 
-    console.log(Math.abs(cellX-cellX2))
-
     for (var i = 0; i < Math.abs(cellX - cellX2); i++) {
 
         if (cellX2 < cellX) {
@@ -342,7 +375,6 @@ function drawSelection(startX, startY, cellX, cellY, canvasBoundingRect, ctx, st
                 distancex++
             }
             for (var k = 0; k < Math.abs(cellY - cellY2); k++) {
-                console.log(distancex, distancey)
                 if (cellY2 < cellY) {
                     distancey--
                 } else {
@@ -466,7 +498,6 @@ function mouseRelease() {
     else {
         clearInterval(id);
         canvasSelection.classList.remove("selectionActive")
-        console.log(lastSelection)
         drawSelection(lastSelection[0], lastSelection[1], lastSelection[2], lastSelection[3], canvas.getBoundingClientRect(), drawingContext, "final")
     }
 }
