@@ -141,7 +141,10 @@
         // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
     
         // the link to your model provided by Teachable Machine export panel
-        const URL = "https://teachablemachine.withgoogle.com/models/iS5kX62Pj/";
+        
+
+        //harder model: https://teachablemachine.withgoogle.com/models/iS5kX62Pj/
+        const URL = "https://teachablemachine.withgoogle.com/models/HfHOtRL6k/";
     
         let model, webcam, labelContainer, maxPredictions;
     
@@ -206,10 +209,6 @@
                 document.getElementById('5').classList.add("fa")
                 document.getElementById('5').classList.remove("fa-regular")
             }
-            if(predictions[1] < 0.2){
-                document.getElementById('5').classList.add("fa")
-                document.getElementById('5').classList.remove("fa-regular")
-            }
             document.getElementById('rating').style.visibility = "visible"
             document.body.style.cursor = 'default'
             document.getElementById('appraiseicon').classList.remove('fa-spinner')
@@ -232,6 +231,7 @@
                 { element: '#pencil', popover: { title: 'Brush', description: 'The basic brush, scales with brush size and can be used for fine details.' } },
                 { element: '#bucket', popover: { title: 'Bucket', description: 'When fill mode is selected, it changes all colors on the canvas.' } },
                 { element: '#eraser', popover: { title: 'Eraser', description: 'Erase your mistakes! Scales with brush size.' } },
+                { element: '#eyedropper', popover: { title: 'Eyedropper', description: 'Pick another color from the canvas.' } },
                 { element: '#select', popover: { title: 'Rectangle', description: 'When fill mode is selected, it fills in a rectangle area. Otherwise it just draws an outline.' } },
                 { element: '#fill', popover: { title: 'Fill Mode', description: 'Fill mode applies to the bucket and rectangle, making them fill more pixels.' } },
                 

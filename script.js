@@ -44,7 +44,7 @@ var CELL_SIDE_COUNT = 16;
 var cellPixelLength = canvas.width / CELL_SIDE_COUNT;
 var colorHistory = {};
 var usedColors = ["#000000"]
-var previewHistory = ["//location", "//prev color"];
+var allColorHistories = ["//location", "//prev color"];
 let mousePos = { x: undefined, y: undefined };
 var previousMousePos
 setClearCells()
