@@ -21,7 +21,7 @@
     justify-content: center;
     align-items: center;     flex-wrap: wrap; align-content: center; height: 100vh;">
         <div id="tools">
-            <button id="pencil" onclick="switchPencil()">
+            <button style="margin-top: 20px;" id="pencil" onclick="switchPencil()">
                 <i class="fa fa-paintbrush"></i>
             </button>
             <button id="bucket" onclick="switchBucket()">
@@ -41,7 +41,7 @@
             </button>
         </div>
         <div id="colors">
-            <div>
+            <div style="margin-top: 20px;">
                 <button class="color" style="background-color: #663931;"></button>
                 <button class="color" style="background-color: #45283c;"></button>
                 <button class="color" style="background-color: #000000;"></button>
@@ -77,7 +77,6 @@
             <div class="inputContainer" id="canvasSizeContainer" style="margin-top: auto;">
                 <i class="fa fa-maximize"></i>
                 <input id="canvasSizeX" type="number" onchange="updateCanvasSize()" min="4" max="128" value='16'>
-                <input style="filter: brightness(0.9);" id="canvasSizeY" type="number" readonly value='16'>
             </div>
             <div class="inputContainer" id="brushSizeContainer">
                 <i class="fa fa-circle"></i>

@@ -72,7 +72,6 @@ function updateCanvasSize(){
         document.getElementById('canvasSizeX').value = 128
     }
     CELL_SIDE_COUNT = parseInt(document.getElementById('canvasSizeX').value)
-    document.getElementById('canvasSizeY').value = parseInt(document.getElementById('canvasSizeX').value)
     cellPixelLength = canvas.width / CELL_SIDE_COUNT;
     var temp = colorHistory
     clearCanvas()
